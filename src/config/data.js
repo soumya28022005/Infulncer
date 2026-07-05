@@ -3,11 +3,11 @@
 // ==========================================================================
 
 export const profile = {
-  name: "Barsha ",
+  name: "Rimpi ",
   tagline: "Content Creator & Digital Storyteller",
   profession: "Lifestyle & Fashion Influencer",
   location: "India",
-  bio: "Hi, I'm Barsha— I create content that connects brands with real audiences. Over the past few years, I've built a community that trusts my recommendations, and I partner with brands who care about authentic storytelling as much as I do.",
+  bio: "Hi, I'm Rimpi— I create content that connects brands with real audiences. Over the past few years, I've built a community that trusts my recommendations, and I partner with brands who care about authentic storytelling as much as I do.",
   longStory: "My journey started with a simple passion for sharing everyday moments online. What began as a hobby grew into a full-time creative career, built one authentic post, one honest review, and one genuine connection at a time. Today, I work with brands across fashion, beauty, lifestyle, and tech — always staying true to the voice that got me here.",
   mission: "To create content that feels real, tell stories that matter, and help brands reach audiences who genuinely care.",
   whyBrandsTrustMe: [
@@ -174,7 +174,7 @@ export const testimonials = [
   {
     name: "Priya Sharma",
     role: "Marketing Head, GlowBeauty Co.",
-    quote: "Working with Barshawas seamless from start to finish. The content exceeded our expectations and delivered real results.",
+    quote: "Working with Rimpiwas seamless from start to finish. The content exceeded our expectations and delivered real results.",
     avatar: "/src/assets/images/testimonial-1.jpg",
   },
   {
@@ -186,7 +186,7 @@ export const testimonials = [
   {
     name: "Ananya Iyer",
     role: "Founder, PureSkin",
-    quote: "Barshagenuinely understood our brand voice and translated it beautifully into her content. Highly recommend.",
+    quote: "Rimpigenuinely understood our brand voice and translated it beautifully into her content. Highly recommend.",
     avatar: "/src/assets/images/testimonial-3.jpg",
   },
 ];
