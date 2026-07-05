@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import ScrollProgressBar from "./components/layout/ScrollProgressBar";
 import BackToTop from "./components/layout/BackToTop";
 import { motion, AnimatePresence } from "framer-motion";
+import emailjs from '@emailjs/browser';
 import { 
   profile, 
   stats, 
@@ -28,7 +29,9 @@ import {
   FaCalendarAlt, 
   FaLink, 
   FaBullhorn, 
-  FaComments
+  FaComments,
+  FaSpinner,
+  FaExclamationCircle
 } from "react-icons/fa";
 
 const iconMap = {
@@ -320,61 +323,191 @@ const FAQ = () => {
   )
 }
 
-const Contact = () => (
-  <section id="contact" className="py-24 bg-neutral-50 dark:bg-neutral-900 relative">
-    <div className="max-w-6xl mx-auto px-6 lg:px-10">
-      <div className="bg-neutral-950 text-white rounded-[3rem] p-10 md:p-16 relative overflow-hidden shadow-2xl">
-         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-violet-500 to-rose-500 rounded-full blur-[100px] opacity-30 -mr-20 -mt-20 pointer-events-none"></div>
-         <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-amber-500 to-rose-500 rounded-full blur-[100px] opacity-20 -ml-20 -mb-20 pointer-events-none"></div>
-         
-         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                 Let's Create <br/>Something <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-rose-400">Great.</span>
-               </h2>
-               <p className="text-neutral-400 mb-10 text-lg max-w-md">
-                 Ready to elevate your brand? Fill out the form below and my management team will get back to you within 24 hours.
-               </p>
-               <div className="space-y-6">
-                 <div className="flex items-center gap-4 text-neutral-200 font-medium text-lg">
-                   <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-amber-400"><FaCheckCircle /></div>
-                   Professional Execution
+const Contact = () => {
+  const formRef = useRef();
+  const [status, setStatus] = useState({ loading: false, success: false, error: '' });
+  const [formData, setFormData] = useState({
+    fullName: '', companyName: '', brandName: '', email: '', phone: '',
+    country: '', campaignType: '', budget: '', timeline: '', platform: '', message: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus({ loading: true, success: false, error: '' });
+
+    try {
+      // Send to EmailJS (You can add Google Apps Script fetch here later)
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        formData,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+
+      setStatus({ loading: false, success: true, error: '' });
+      setFormData({
+        fullName: '', companyName: '', brandName: '', email: '', phone: '',
+        country: '', campaignType: '', budget: '', timeline: '', platform: '', message: ''
+      });
+      
+      setTimeout(() => setStatus(prev => ({ ...prev, success: false })), 5000);
+      
+    } catch (err) {
+      console.error("EmailJS Error:", err);
+      setStatus({ loading: false, success: false, error: 'Failed to send proposal. Please try again.' });
+    }
+  };
+
+  const inputClass = "w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-500 focus:outline-none focus:border-amber-500 transition-colors text-sm";
+  const labelClass = "block text-xs font-medium text-neutral-400 mb-1.5 uppercase tracking-wide";
+
+  return (
+    <section id="contact" className="py-24 bg-neutral-50 dark:bg-neutral-900 relative">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+        <div className="bg-neutral-950 text-white rounded-[3rem] p-10 md:p-12 relative overflow-hidden shadow-2xl">
+           <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-violet-500 to-rose-500 rounded-full blur-[100px] opacity-30 -mr-20 -mt-20 pointer-events-none"></div>
+           <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-amber-500 to-rose-500 rounded-full blur-[100px] opacity-20 -ml-20 -mb-20 pointer-events-none"></div>
+           
+           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
+              
+              {/* Left Side: Information */}
+              <div className="lg:col-span-2 pt-4">
+                 <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+                   Let's Create <br/>Something <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-rose-400">Great.</span>
+                 </h2>
+                 <p className="text-neutral-400 mb-10 text-lg">
+                   Ready to elevate your brand? Fill out the form and my management team will get back to you within 24 hours.
+                 </p>
+                 <div className="space-y-6 hidden sm:block">
+                   <div className="flex items-center gap-4 text-neutral-200 font-medium text-lg">
+                     <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-amber-400"><FaCheckCircle /></div>
+                     Professional Execution
+                   </div>
+                   <div className="flex items-center gap-4 text-neutral-200 font-medium text-lg">
+                     <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-amber-400"><FaCheckCircle /></div>
+                     Fast Turnaround
+                   </div>
+                   <div className="flex items-center gap-4 text-neutral-200 font-medium text-lg">
+                     <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-amber-400"><FaCheckCircle /></div>
+                     High Engagement ROI
+                   </div>
                  </div>
-                 <div className="flex items-center gap-4 text-neutral-200 font-medium text-lg">
-                   <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-amber-400"><FaCheckCircle /></div>
-                   Fast Turnaround
-                 </div>
-                 <div className="flex items-center gap-4 text-neutral-200 font-medium text-lg">
-                   <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-amber-400"><FaCheckCircle /></div>
-                   High Engagement ROI
-                 </div>
-               </div>
-            </div>
-            
-            <div className="bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 shadow-xl">
-               <form className="space-y-5" onSubmit={e => e.preventDefault()}>
-                 <div>
-                   <label className="block text-sm font-medium text-neutral-400 mb-2">Name / Brand</label>
-                   <input type="text" placeholder="GlowBeauty Co." className="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-amber-500 transition-colors" />
-                 </div>
-                 <div>
-                   <label className="block text-sm font-medium text-neutral-400 mb-2">Email Address</label>
-                   <input type="email" placeholder="hello@brand.com" className="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-amber-500 transition-colors" />
-                 </div>
-                 <div>
-                   <label className="block text-sm font-medium text-neutral-400 mb-2">Campaign Details</label>
-                   <textarea placeholder="Tell me about your timeline, deliverables, and budget..." rows="4" className="w-full px-5 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-neutral-600 focus:outline-none focus:border-amber-500 transition-colors resize-none"></textarea>
-                 </div>
-                 <button className="w-full py-4 mt-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-bold text-lg hover:opacity-90 hover:scale-[1.02] transition-all flex justify-center items-center gap-3 shadow-lg shadow-rose-500/25">
-                   Send Proposal <FaArrowRight />
-                 </button>
-               </form>
-            </div>
-         </div>
+              </div>
+              
+              {/* Right Side: Enhanced Form */}
+              <div className="lg:col-span-3 bg-white/5 backdrop-blur-md p-8 rounded-3xl border border-white/10 shadow-xl">
+                 <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+                   
+                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                     <div>
+                       <label className={labelClass}>Full Name *</label>
+                       <input required type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="John Doe" className={inputClass} />
+                     </div>
+                     <div>
+                       <label className={labelClass}>Email Address *</label>
+                       <input required type="email" name="email" value={formData.email} onChange={handleChange} placeholder="hello@brand.com" className={inputClass} />
+                     </div>
+                   </div>
+
+                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                     <div>
+                       <label className={labelClass}>Brand Name *</label>
+                       <input required type="text" name="brandName" value={formData.brandName} onChange={handleChange} placeholder="GlowBeauty Co." className={inputClass} />
+                     </div>
+                     <div>
+                       <label className={labelClass}>Company Name</label>
+                       <input type="text" name="companyName" value={formData.companyName} onChange={handleChange} placeholder="Optional" className={inputClass} />
+                     </div>
+                   </div>
+
+                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                     <div>
+                       <label className={labelClass}>Phone Number</label>
+                       <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="+1 (555) 000-0000" className={inputClass} />
+                     </div>
+                     <div>
+                       <label className={labelClass}>Country</label>
+                       <input type="text" name="country" value={formData.country} onChange={handleChange} placeholder="United States" className={inputClass} />
+                     </div>
+                   </div>
+
+                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                     <div>
+                       <label className={labelClass}>Campaign Type</label>
+                       <select name="campaignType" value={formData.campaignType} onChange={handleChange} className={`${inputClass} appearance-none`}>
+                         <option value="" disabled>Select...</option>
+                         <option value="Sponsored Post">Sponsored Post</option>
+                         <option value="UGC">UGC Content</option>
+                         <option value="Brand Ambassador">Ambassador</option>
+                         <option value="Other">Other</option>
+                       </select>
+                     </div>
+                     <div>
+                       <label className={labelClass}>Budget (USD) *</label>
+                       <select required name="budget" value={formData.budget} onChange={handleChange} className={`${inputClass} appearance-none`}>
+                         <option value="" disabled>Select...</option>
+                         <option value="Under $500">&lt; $500</option>
+                         <option value="$500 - $1,500">$500 - $1.5k</option>
+                         <option value="$1,500 - $5,000">$1.5k - $5k</option>
+                         <option value="$5,000+">$5k+</option>
+                       </select>
+                     </div>
+                     <div>
+                       <label className={labelClass}>Timeline</label>
+                       <select name="timeline" value={formData.timeline} onChange={handleChange} className={`${inputClass} appearance-none`}>
+                         <option value="" disabled>Select...</option>
+                         <option value="ASAP">ASAP</option>
+                         <option value="1-2 Weeks">1-2 Weeks</option>
+                         <option value="1 Month+">1 Month+</option>
+                       </select>
+                     </div>
+                   </div>
+
+                   <div>
+                     <label className={labelClass}>Social Platform(s)</label>
+                     <input type="text" name="platform" value={formData.platform} onChange={handleChange} placeholder="e.g. Instagram Reels, YouTube Shorts" className={inputClass} />
+                   </div>
+
+                   <div>
+                     <label className={labelClass}>Campaign Details / Message *</label>
+                     <textarea required name="message" value={formData.message} onChange={handleChange} placeholder="Tell me about your deliverables, goals, and expectations..." rows="3" className={`${inputClass} resize-none`}></textarea>
+                   </div>
+                   
+                   {/* Alerts */}
+                   {status.error && (
+                     <div className="flex items-center gap-2 text-red-400 bg-red-400/10 p-3 rounded-lg border border-red-400/20 text-sm">
+                       <FaExclamationCircle /> {status.error}
+                     </div>
+                   )}
+                   {status.success && (
+                     <motion.div initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} className="flex items-center gap-2 text-emerald-400 bg-emerald-400/10 p-3 rounded-lg border border-emerald-400/20 text-sm">
+                       <FaCheckCircle /> Proposal sent! We'll be in touch shortly.
+                     </motion.div>
+                   )}
+
+                   <button 
+                     disabled={status.loading}
+                     className="w-full py-4 mt-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-white font-bold text-lg hover:opacity-90 hover:scale-[1.02] transition-all flex justify-center items-center gap-3 shadow-lg shadow-rose-500/25 disabled:opacity-70 disabled:hover:scale-100"
+                   >
+                     {status.loading ? (
+                       <><FaSpinner className="animate-spin" /> Sending...</>
+                     ) : (
+                       <>Send Proposal <FaArrowRight /></>
+                     )}
+                   </button>
+                 </form>
+              </div>
+
+           </div>
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 function App() {
   return (
