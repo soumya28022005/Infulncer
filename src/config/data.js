@@ -3,7 +3,7 @@
 // ==========================================================================
 
 export const profile = {
-  name: "Ankhi Chatterjee",
+  name: "Ankhi Karmakar",
   tagline: "Content Creator & Digital Storyteller",
   profession: "Lifestyle & Fashion Influencer",
   location: "India",
