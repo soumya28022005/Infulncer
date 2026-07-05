@@ -41,7 +41,7 @@ export default function Navbar() {
       }`}
     >
       <nav className="max-w-7xl mx-auto px-6 lg:px-10 h-18 flex items-center justify-between py-4">
-        
+        <a
           href="#hero"
           onClick={(e) => {
             e.preventDefault();
@@ -56,7 +56,7 @@ export default function Navbar() {
         <ul className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
             <li key={link.href}>
-              
+              <a
                 href={link.href}
                 onClick={(e) => {
                   e.preventDefault();
@@ -78,7 +78,7 @@ export default function Navbar() {
           >
             {theme === "dark" ? <FaSun size={15} /> : <FaMoon size={15} />}
           </button>
-          
+          <a
             href="#contact"
             onClick={(e) => {
               e.preventDefault();
@@ -146,7 +146,7 @@ export default function Navbar() {
                     closed: { opacity: 0, y: 15 },
                   }}
                 >
-                  
+                  <a
                     href={link.href}
                     onClick={(e) => {
                       e.preventDefault();
@@ -165,7 +165,7 @@ export default function Navbar() {
                 }}
                 className="mt-4"
               >
-                
+                <a
                   href="#contact"
                   onClick={(e) => {
                     e.preventDefault();

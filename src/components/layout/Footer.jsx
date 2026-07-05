@@ -2,10 +2,10 @@ import { FaInstagram, FaYoutube, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { profile, socialLinks } from "../../config/data";
 
 const iconMap = {
-  FaInstagram: FaInstagram,
-  FaYoutube: FaYoutube,
-  FaLinkedin: FaLinkedin,
-  FaTwitter: FaTwitter,
+  FaInstagram,
+  FaYoutube,
+  FaLinkedin,
+  FaTwitter,
 };
 
 export default function Footer() {
@@ -26,8 +26,9 @@ export default function Footer() {
           <div className="flex items-center gap-4">
             {socialLinks.map((social) => {
               const Icon = iconMap[social.icon];
+
               return (
-                
+                <a
                   key={social.name}
                   href={social.url}
                   target="_blank"
@@ -43,7 +44,9 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
-          <p>© {year} {profile.name}. All rights reserved.</p>
+          <p>
+            © {year} {profile.name}. All rights reserved.
+          </p>
           <p>Designed & built for premium brand collaborations.</p>
         </div>
       </div>
